@@ -1,0 +1,17 @@
+[package]
+name = "ogl_house_scene"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+glium = { version = "0.31.0", features = ["default", "unstable"] }
+
+[[example]]
+name = "codegen"
+path = "./src/codegen/main.rs"
+
+[dev-dependencies]
+obj-rs = "0.7.0"
+walkdir = "2.3.2"
