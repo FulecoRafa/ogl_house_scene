@@ -1,4 +1,5 @@
 use crate::{rotate, scale, translate};
+use crate::matrices::view_matrix;
 
 /// Struct that holds the transform parameters of a drawable object.
 #[derive(Clone)]
@@ -11,6 +12,8 @@ pub struct Transform {
     pub rotate_self: [f32; 3],
     /// Scale in s
     pub scale: f32,
+    /// View in [direction, position, up]
+    pub view: [[f32; 3]; 3],
 }
 
 impl Default for Transform {
@@ -20,6 +23,7 @@ impl Default for Transform {
             rotation: [0.0, 0.0, 0.0],
             rotate_self: [0.0, 0.0, 0.0],
             scale: 1.0,
+            view: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
         }
     }
 }
@@ -39,5 +43,9 @@ impl Transform {
 
     pub fn get_self_rotation(&self) -> [[f32; 4]; 4] {
         rotate!(self.rotate_self[0], self.rotate_self[1], self.rotate_self[2])
+    }
+
+    pub fn get_view(&self) -> [[f32; 4]; 4] {
+        view_matrix(&self.view[0], &self.view[1], &self.view[2])
     }
 }

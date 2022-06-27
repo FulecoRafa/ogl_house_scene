@@ -10,6 +10,7 @@ uniform mat4 translation;
 uniform mat4 rotation;
 uniform mat4 scale;
 uniform mat4 self_rotation;
+uniform mat4 view;
 
 void main() {
     v_tex_coords = tex_coords;
@@ -20,6 +21,7 @@ void main() {
         * normal;
     // Operations occur from right to left
     gl_Position =
+    view *
     rotation *
     translation *
     scale *
