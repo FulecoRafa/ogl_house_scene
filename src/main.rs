@@ -11,6 +11,7 @@ mod vertex;
 mod model;
 mod transform;
 mod matrices;
+mod model_parser;
 
 use model::humvee::Humvee;
 use crate::transform::Transform;
@@ -57,14 +58,19 @@ fn main() {
     };
 
     let car: Humvee = Humvee::new(&display);
+    let mut rotate_x: f32 = 0.0;
+    let mut rotate_y: f32 = 0.0;
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
-        target.clear_color_and_depth((0., 0., 0., 1.), 1.);
+        target.clear_color_and_depth((0., 0., 1., 1.), 1.);
 
         set_wait(control_flow, 16_666_667);
 
-        car.draw(&mut target, &draw_params, &Transform::default());
+        rotate_x += 0.1;
+        rotate_y += 0.05;
+
+        car.draw(&mut target, &draw_params, &Transform{rotate_self: [rotate_x, rotate_y, 0.0], ..Default::default()});
 
         target.finish().unwrap();
     });

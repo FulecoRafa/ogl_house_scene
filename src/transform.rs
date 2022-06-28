@@ -22,7 +22,7 @@ impl Default for Transform {
             translation: [0.0, 0.0, 0.0],
             rotation: [0.0, 0.0, 0.0],
             rotate_self: [0.0, 0.0, 0.0],
-            scale: 1.0,
+            scale: 0.25,
             view: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
         }
     }
