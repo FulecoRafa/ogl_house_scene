@@ -35,6 +35,7 @@ impl Model for GenericModel {
             rotation: transform.get_rotation(),
             self_rotation: transform.get_self_rotation(),
             view: transform.get_view(),
+            perspective: transform.get_perspective(),
             light: get_light(),
         };
         target.draw((&self.model_data.vertices, &self.model_data.normals), &self.model_data.indices, get_program().unwrap(), &uniforms, params).unwrap();

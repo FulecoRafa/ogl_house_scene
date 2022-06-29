@@ -106,8 +106,8 @@ macro_rules! identity {
 }
 
 /// Function that generates the perspective matrix
-pub fn perspective_matrix(target: &Frame) -> [[f32; 4]; 4] {
-    let (width, height) = target.get_dimensions();
+pub fn perspective_matrix(dimensions: (u32, u32)) -> [[f32; 4]; 4] {
+    let (width, height) = dimensions;
     let aspect_ratio = height as f32 / width as f32;
 
     const FOV: f32 = PI / 3.0;

@@ -1,16 +1,12 @@
 #version 330
 
-in vec3 position;
+in vec3 position, normal;
 in vec2 tex_coords;
-in vec3 normal;
-out vec2 v_tex_coords;
-out vec3 v_normal;
 
-uniform mat4 translation;
-uniform mat4 rotation;
-uniform mat4 scale;
-uniform mat4 self_rotation;
-uniform mat4 view;
+out vec3 v_normal;
+out vec2 v_tex_coords;
+
+uniform mat4 translation, rotation, scale, self_rotation, view, perspective;
 
 void main() {
     v_tex_coords = tex_coords;
@@ -22,6 +18,7 @@ void main() {
     // Operations occur from right to left
     gl_Position =
     view *
+    perspective *
     rotation *
     translation *
     scale *

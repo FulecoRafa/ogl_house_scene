@@ -81,6 +81,8 @@ fn main() {
             up
         } = event_handler;
 
+        let dimensions = target.get_dimensions();
+
         car.draw(
             &mut target,
             &draw_params,
@@ -88,6 +90,7 @@ fn main() {
                 rotate_self: [spin, tilt, 0.],
                 translation: [translate_x, translate_y, 0.],
                 view: [direction, position, up],
+                frame_dimensions: Some(dimensions),
                 ..Default::default()
             }
         );

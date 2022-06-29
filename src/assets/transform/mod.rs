@@ -1,5 +1,6 @@
-use crate::{rotate, scale, translate};
-use crate::assets::matrices::view_matrix;
+use glium::Frame;
+use crate::{identity, rotate, scale, translate};
+use crate::assets::matrices::{perspective_matrix, view_matrix};
 
 /// Struct that holds the transform parameters of a drawable object.
 #[derive(Clone)]
@@ -14,6 +15,8 @@ pub struct Transform {
     pub scale: f32,
     /// View in [direction, position, up]
     pub view: [[f32; 3]; 3],
+    /// Frame
+    pub frame_dimensions: Option<(u32, u32)>,
 }
 
 impl Default for Transform {
@@ -24,6 +27,7 @@ impl Default for Transform {
             rotate_self: [0.0, 0.0, 0.0],
             scale: 0.25,
             view: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
+            frame_dimensions: None,
         }
     }
 }
@@ -47,5 +51,12 @@ impl Transform {
 
     pub fn get_view(&self) -> [[f32; 4]; 4] {
         view_matrix(&self.view[0], &self.view[1], &self.view[2])
+    }
+
+    pub fn get_perspective(&self) -> [[f32; 4]; 4] {
+        match self.frame_dimensions {
+            Some(dim) => perspective_matrix(dim),
+            None => identity!(),
+        }
     }
 }
