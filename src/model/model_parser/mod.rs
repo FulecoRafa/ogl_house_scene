@@ -7,7 +7,8 @@ use std::io::prelude::*;
 use std::path::{Path, PathBuf};
 
 use obj::{load_obj, Obj, TexturedVertex};
-use crate::assets::vertex::{Vertex, Normal};
+
+use crate::assets::vertex::{Normal, Vertex};
 
 pub(crate) fn parse_model(path: &str) -> (Vec<Vertex>, Vec<u32>, Vec<Normal>) {
     let file = BufReader::new(fs::File::open(path).unwrap());

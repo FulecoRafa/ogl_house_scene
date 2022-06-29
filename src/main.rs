@@ -1,20 +1,23 @@
 #[macro_use]
 extern crate glium;
 
-use glium::glutin;
-use glium::backend::glutin::DisplayCreationError;
 use glium::{Display, Surface};
+use glium::backend::glutin::DisplayCreationError;
+use glium::glutin;
 use glium::glutin::event_loop::{ControlFlow, EventLoop};
+
+use model::generic_model::GenericModel;
+
+use crate::assets::{
+    transform::Transform,
+    vertex::Light,
+};
+use crate::event_handler::EventHandler;
 use crate::model::{Model, set_program};
 
 mod model;
 mod assets;
-
-use model::generic_model::GenericModel;
-use crate::assets::{
-    vertex::Light,
-    transform::Transform,
-};
+mod event_handler;
 
 //Starts the window and the event loop
 fn start_opengl(
@@ -57,8 +60,7 @@ fn main() {
     };
 
     let car: GenericModel = GenericModel::new(&display, "models/Humvee.obj".to_string());
-    let mut rotate_x: f32 = 0.0;
-    let mut rotate_y: f32 = 0.0;
+    let mut event_handler = EventHandler::default();
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -66,10 +68,28 @@ fn main() {
 
         set_wait(control_flow, 16_666_667);
 
-        rotate_x += 0.1;
-        rotate_y += 0.05;
+        event_handler.handle_event(event, control_flow);
 
-        car.draw(&mut target, &draw_params, &Transform{rotate_self: [rotate_x, rotate_y, 0.0], ..Default::default()});
+        let EventHandler {
+            grow,
+            tilt,
+            spin,
+            translate_x,
+            translate_y,
+            direction,
+            position,
+            up
+        } = event_handler;
+
+        car.draw(
+            &mut target,
+            &draw_params,
+            &Transform{
+                rotate_self: [spin, tilt, 0.],
+                translation: [translate_x, translate_y, 0.],
+                ..Default::default()
+            }
+        );
 
         target.finish().unwrap();
     });

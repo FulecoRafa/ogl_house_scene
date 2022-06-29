@@ -1,11 +1,12 @@
-use glium::{Display, DrawParameters, Frame, Surface, VertexBuffer, IndexBuffer};
-use crate::model::{get_light, Model, ModelData};
-use crate::model::get_program;
-use crate::model::model_parser::parse_model;
+use glium::{Display, DrawParameters, Frame, IndexBuffer, Surface, VertexBuffer};
+
 use crate::assets::{
     transform::*,
     vertex::*,
 };
+use crate::model::{get_light, Model, ModelData};
+use crate::model::get_program;
+use crate::model::model_parser::parse_model;
 
 pub struct GenericModel {
     pub model_data: ModelData,
