@@ -1,3 +1,4 @@
+use std::f32::consts::PI;
 use glium::glutin::event::{ElementState, Event, VirtualKeyCode, WindowEvent};
 use glium::glutin::event_loop::ControlFlow;
 
@@ -69,15 +70,27 @@ impl EventHandler {
                     const ANGLE_STEP: f32 = 0.0005;
                     /// If the key is pressed, the value is changed
                     if let state = ElementState::Pressed {
-                        println!("pos: {:?}, dir: {:?}", position, direction);
+                        println!("pos: {:?}, dir: {:?}, atanyz: {}, atanxz :{}", position, direction, (direction[1] - position[1]).atan2(direction[2] - position[2]), (direction[0] - position[0]).atan2(direction[2] - position[2]));
                         let norm_cross = normalize_vector(&cross_product(direction, up));
                         let norm_direction = normalize_vector(direction);
                         /// Parses the pressed key and changes the value
                         match virtual_keycode {
-                            VirtualKeyCode::W => *position = [position[0] + norm_direction[0] * STEP, position[1] + norm_direction[1] * STEP, position[2] + norm_direction[2] * STEP],
-                            VirtualKeyCode::A => *position = [position[0] + norm_cross[0] * STEP, position[1] + norm_cross[1] * STEP, position[2] + norm_cross[2] * STEP],
-                            VirtualKeyCode::S => *position = [position[0] - norm_direction[0] * STEP, position[1] - norm_direction[1] * STEP, position[2] - norm_direction[2] * STEP],
-                            VirtualKeyCode::D => *position = [position[0] - norm_cross[0] * STEP, position[1] - norm_cross[1] * STEP, position[2] - norm_cross[2] * STEP],
+                            VirtualKeyCode::W => {
+                                *position = [position[0] + norm_direction[0] * STEP, position[1] + norm_direction[1] * STEP, position[2] + norm_direction[2] * STEP];
+                                *direction = [direction[0] + norm_direction[0] * STEP, direction[1] + norm_direction[1] * STEP, direction[2] + norm_direction[2] * STEP];
+                            },
+                            VirtualKeyCode::A => {
+                                *position = [position[0] + norm_cross[0] * STEP, position[1] + norm_cross[1] * STEP, position[2] + norm_cross[2] * STEP];
+                                *direction = [direction[0] + norm_cross[0] * STEP, direction[1] + norm_cross[1] * STEP, direction[2] + norm_cross[2] * STEP];
+                            }
+                            VirtualKeyCode::S => {
+                                *position = [position[0] - norm_direction[0] * STEP, position[1] - norm_direction[1] * STEP, position[2] - norm_direction[2] * STEP];
+                                *direction = [direction[0] - norm_direction[0] * STEP, direction[1] - norm_direction[1] * STEP, direction[2] - norm_direction[2] * STEP];
+                            }
+                            VirtualKeyCode::D => {
+                                *position = [position[0] - norm_cross[0] * STEP, position[1] - norm_cross[1] * STEP, position[2] - norm_cross[2] * STEP];
+                                *direction = [direction[0] - norm_cross[0] * STEP, direction[1] - norm_cross[1] * STEP, direction[2] - norm_cross[2] * STEP];
+                            }
                             VirtualKeyCode::J => *spin += STEP,
                             VirtualKeyCode::K => *spin -= STEP,
                             VirtualKeyCode::Right => {
@@ -85,14 +98,14 @@ impl EventHandler {
                                 let y = direction[1] - position[1];
                                 let z = direction[2] - position[2];
 
-                                let mut theta = x.atan2(z);
-                                let len = (x * x + z * z).sqrt();
+                                let mut theta = (x.atan2(z) + 2. * PI) % (2. * PI);
+                                let len = (x * x + y * y + z * z).sqrt();
                                 theta += STEP;
 
                                 *direction = [
-                                    theta.sin() * len,
+                                    theta.sin() * len + position[0],
                                     direction[1],
-                                    theta.cos() * len,
+                                    theta.cos() * len + position[2],
                                 ];
                             }
                             VirtualKeyCode::Left => {
@@ -100,14 +113,14 @@ impl EventHandler {
                                 let y = direction[1] - position[1];
                                 let z = direction[2] - position[2];
 
-                                let mut theta = x.atan2(z);
-                                let len = (x * x + z * z).sqrt();
+                                let mut theta = (x.atan2(z) + 2. * PI) % (2. * PI);
+                                let len = (x * x + y * y + z * z).sqrt();
                                 theta -= STEP;
 
                                 *direction = [
-                                    theta.sin() * len,
+                                    theta.sin() * len + position[0],
                                     direction[1],
-                                    theta.cos() * len,
+                                    theta.cos() * len + position[2],
                                 ];
                             }
                             VirtualKeyCode::Up => {
@@ -115,14 +128,14 @@ impl EventHandler {
                                 let y = direction[1] - position[1];
                                 let z = direction[2] - position[2];
 
-                                let mut theta = y.atan2(z);
+                                let mut theta = (y.atan2(z) + 2. * PI) % (2. * PI);
                                 let len = (y * y + z * z).sqrt();
                                 theta += STEP;
 
                                 *direction = [
                                     direction[0],
-                                    theta.sin() * len,
-                                    theta.cos() * len,
+                                    theta.sin() * len + position[1],
+                                    theta.cos() * len + position[2],
                                 ];
                             }
                             VirtualKeyCode::Down => {
@@ -130,14 +143,14 @@ impl EventHandler {
                                 let y = direction[1] - position[1];
                                 let z = direction[2] - position[2];
 
-                                let mut theta = y.atan2(z);
+                                let mut theta = (y.atan2(z) + 2. * PI) % (2. * PI);
                                 let len = (y * y + z * z).sqrt();
                                 theta -= STEP;
 
                                 *direction = [
                                     direction[0],
-                                    theta.sin() * len,
-                                    theta.cos() * len,
+                                    theta.sin() * len + position[1],
+                                    theta.cos() * len + position[2],
                                 ];
                             }
                             VirtualKeyCode::Numpad8 => (*position)[1] -= STEP,

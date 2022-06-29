@@ -10,18 +10,21 @@ uniform mat4 translation, rotation, scale, self_rotation, view, perspective;
 
 void main() {
     v_tex_coords = tex_coords;
-    v_normal = transpose(inverse(mat3(rotation)))
-        * transpose(inverse(mat3(translation)))
-        * transpose(inverse(mat3(scale)))
-        * transpose(inverse(mat3(self_rotation)))
-        * normal;
+
     // Operations occur from right to left
-    gl_Position =
+    mat4 matrix =
     perspective *
     view *
     rotation *
     translation *
     scale *
-    self_rotation *
+    self_rotation;
+
+    gl_Position =
+    matrix *
     vec4(position, 1.0);
+
+    v_normal =
+    inverse(transpose(mat3(matrix))) *
+    normal;
 }

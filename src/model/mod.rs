@@ -34,7 +34,7 @@ pub fn get_program() -> Option<&'static Program> {
     }
 }
 
-static mut LIGHT: Light = [0.0, 0.0, 0.0];
+static mut LIGHT: Light = [-1.0, 0.4, 0.9f32];
 
 pub fn set_light(light: Light) {
     unsafe {
