@@ -5,7 +5,6 @@ use std::fs::DirBuilder;
 use std::io::BufReader;
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
-
 use obj::{load_obj, Obj, TexturedVertex};
 
 use crate::assets::vertex::{Normal, Vertex};

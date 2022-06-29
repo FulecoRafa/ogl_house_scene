@@ -13,9 +13,21 @@ pub struct GenericModel {
 }
 
 impl GenericModel {
-    pub fn new(display: &Display, model_src: String) -> Self {
 
-        let (vertices, indices, normals) = parse_model(&model_src);
+    pub fn new(display: &Display, vertices: &Vec<Vertex>, indices: &Vec<u32>, normals: &Vec<Normal>) -> GenericModel {
+        let model_data = ModelData {
+            vertices: VertexBuffer::new(display, vertices).unwrap(),
+            indices: IndexBuffer::new(display, glium::index::PrimitiveType::TrianglesList, indices).unwrap(),
+            normals: VertexBuffer::new(display, normals).unwrap(),
+        };
+        GenericModel {
+            model_data,
+        }
+    }
+
+    pub fn from_obj(display: &Display, obj_src: String) -> Self {
+
+        let (vertices, indices, normals) = parse_model(&obj_src);
 
         GenericModel {
             model_data: ModelData {

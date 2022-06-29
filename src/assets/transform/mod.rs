@@ -17,6 +17,8 @@ pub struct Transform {
     pub view: [[f32; 3]; 3],
     /// Frame
     pub frame_dimensions: Option<(u32, u32)>,
+    // Texture
+    // pub texture: Option<glium::exture::T>,
 }
 
 impl Default for Transform {
@@ -28,6 +30,7 @@ impl Default for Transform {
             scale: 0.25,
             view: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
             frame_dimensions: None,
+            // texture: None,
         }
     }
 }
