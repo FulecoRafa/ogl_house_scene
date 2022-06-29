@@ -87,6 +87,7 @@ fn main() {
             &Transform{
                 rotate_self: [spin, tilt, 0.],
                 translation: [translate_x, translate_y, 0.],
+                view: [direction, position, up],
                 ..Default::default()
             }
         );
