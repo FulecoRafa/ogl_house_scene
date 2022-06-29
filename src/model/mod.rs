@@ -1,6 +1,9 @@
 use glium::{Display, IndexBuffer, Program, VertexBuffer};
-use crate::transform::Transform;
-use crate::vertex::{Light, Normal, Vertex};
+use crate::assets::{
+    vertex::*,
+    transform::*,
+    matrices::*,
+};
 
 pub mod generic_model;
 mod model_parser;

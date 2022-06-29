@@ -1,5 +1,5 @@
 use crate::{rotate, scale, translate};
-use crate::matrices::view_matrix;
+use crate::assets::matrices::view_matrix;
 
 /// Struct that holds the transform parameters of a drawable object.
 #[derive(Clone)]

@@ -7,14 +7,14 @@ use glium::{Display, Surface};
 use glium::glutin::event_loop::{ControlFlow, EventLoop};
 use crate::model::{Model, set_program};
 
-mod vertex;
 mod model;
-mod transform;
-mod matrices;
+mod assets;
 
 use model::generic_model::GenericModel;
-use crate::transform::Transform;
-use crate::vertex::Light;
+use crate::assets::{
+    vertex::Light,
+    transform::Transform,
+};
 
 //Starts the window and the event loop
 fn start_opengl(
