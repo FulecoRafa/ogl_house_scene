@@ -18,7 +18,7 @@ pub(crate) fn parse_model(path: &str) -> (Vec<Vertex>, Vec<u32>, Vec<Normal>) {
     let vertices: Vec<Vertex> = object.vertices.iter()
         .map(|v| {
             Vertex {
-                position: [v.position[0] / 100., v.position[1] / 100., v.position[2] / 100.],
+                position: [v.position[0] / 200., v.position[1] / 200., v.position[2] / 200.],
                 tex_coords: [v.texture[0], v.texture[1]],
             }
         })

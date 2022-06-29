@@ -13,7 +13,7 @@ pub struct Transform {
     pub rotate_self: [f32; 3],
     /// Scale in s
     pub scale: f32,
-    /// View in [direction, position, up]
+    /// View in [position, direction, up]
     pub view: [[f32; 3]; 3],
     /// Frame
     pub frame_dimensions: Option<(u32, u32)>,

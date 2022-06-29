@@ -52,7 +52,7 @@ fn main() {
         depth: glium::Depth {
             test: glium::DepthTest::IfLess,
             write: true,
-            range: (0.0, 0.9),
+            range: (0.0, 1.0),
             ..Default::default()
         },
         backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
@@ -60,7 +60,10 @@ fn main() {
     };
 
     let car: GenericModel = GenericModel::new(&display, "models/Humvee.obj".to_string());
-    let mut event_handler = EventHandler::default();
+    let mut event_handler = EventHandler{
+        grow: 0.1,
+        ..Default::default()
+    };
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -88,8 +91,9 @@ fn main() {
             &draw_params,
             &Transform{
                 rotate_self: [spin, tilt, 0.],
+                scale: 0.2,
                 translation: [translate_x, translate_y, 0.],
-                view: [direction, position, up],
+                view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 ..Default::default()
             }

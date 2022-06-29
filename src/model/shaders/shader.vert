@@ -17,11 +17,11 @@ void main() {
         * normal;
     // Operations occur from right to left
     gl_Position =
-    view *
     perspective *
-    rotation *
-    translation *
+    view *
+//    rotation *
+//    translation *
     scale *
-    self_rotation *
+//    self_rotation *
     vec4(position, 1.0);
 }

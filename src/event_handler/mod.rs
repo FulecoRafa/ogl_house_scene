@@ -4,6 +4,14 @@ use glium::glutin::event_loop::ControlFlow;
 use crate::glutin;
 use crate::glutin::event::KeyboardInput;
 
+fn cross_product(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
+    [
+        a[1] * b[2] - a[2] * b[1],
+        a[2] * b[0] - a[0] * b[2],
+        a[0] * b[1] - a[1] * b[0],
+    ]
+}
+
 /// Struct that handles the events of the window.
 pub struct EventHandler {
     pub grow: f32,
@@ -51,24 +59,26 @@ impl EventHandler {
                     const STEP: f32 = 0.05;
                     /// If the key is pressed, the value is changed
                     if let state = ElementState::Pressed {
+                        let cross = cross_product(direction, up);
                         /// Parses the pressed key and changes the value
                         match virtual_keycode {
-                            VirtualKeyCode::W => *grow += STEP,
-                            VirtualKeyCode::A => *tilt -= STEP,
-                            VirtualKeyCode::S => *grow -= STEP,
-                            VirtualKeyCode::D => *tilt += STEP,
+                            VirtualKeyCode::W => *position = [position[0] + direction[0] * STEP, position[1] + direction[1] * STEP, position[2] + direction[2] * STEP],
+                            VirtualKeyCode::A => *position = [position[0] + cross[0] * STEP, position[1] + cross[1] * STEP, position[2] + cross[2] * STEP],
+                            VirtualKeyCode::S => *position = [position[0] - direction[0] * STEP, position[1] - direction[1] * STEP, position[2] - direction[2] * STEP],
+                            VirtualKeyCode::D => *position = [position[0] - cross[0] * STEP, position[1] - cross[1] * STEP, position[2] - cross[2] * STEP],
                             VirtualKeyCode::J => *spin += STEP,
                             VirtualKeyCode::K => *spin -= STEP,
-                            VirtualKeyCode::Right => *translate_x += STEP,
-                            VirtualKeyCode::Left => *translate_x -= STEP,
-                            VirtualKeyCode::Up => *translate_y += STEP,
-                            VirtualKeyCode::Down => *translate_y -= STEP,
+                            VirtualKeyCode::Right => (*direction)[0] += STEP,
+                            VirtualKeyCode::Left => (*direction)[0] -= STEP,
+                            VirtualKeyCode::Up => (*direction)[1] += STEP,
+                            VirtualKeyCode::Down => (*direction)[1] -= STEP,
                             VirtualKeyCode::Numpad8 => (*position)[1] -= STEP,
                             VirtualKeyCode::Numpad2 => (*position)[1] += STEP,
                             VirtualKeyCode::Numpad4 => (*position)[0] += STEP,
                             VirtualKeyCode::Numpad6 => (*position)[0] -= STEP,
                             VirtualKeyCode::Numpad5 => (*position)[2] += STEP,
-                            VirtualKeyCode::NumpadSubtract => (*position)[2] -= STEP,
+                            VirtualKeyCode::NumpadSubtract => *translate_x -= STEP,
+                            VirtualKeyCode::NumpadAdd => *translate_x += STEP,
                             VirtualKeyCode::F1 => (*direction)[0] -= STEP,
                             VirtualKeyCode::F2 => (*direction)[0] += STEP,
                             VirtualKeyCode::F3 => (*direction)[1] -= STEP,
