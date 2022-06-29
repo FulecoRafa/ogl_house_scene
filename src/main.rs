@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate glium;
 
-use glium::glutin;
+use glium::{glutin, IndexBuffer, VertexBuffer};
 use glium::backend::glutin::DisplayCreationError;
 use glium::{Display, Surface};
 use glium::glutin::event_loop::{ControlFlow, EventLoop};
@@ -11,8 +11,11 @@ mod vertex;
 mod model;
 mod transform;
 mod matrices;
+mod texture_loader;
+mod skybox;
 
 use model::humvee::Humvee;
+use vertex::Vertex;
 use crate::transform::Transform;
 use crate::vertex::Light;
 
@@ -49,14 +52,44 @@ fn main() {
         depth: glium::Depth {
             test: glium::DepthTest::IfLess,
             write: true,
-            range: (0.0, 0.9),
+            range: (0.0, 1.0),
             ..Default::default()
         },
         backface_culling: glium::draw_parameters::BackfaceCullingMode::CullClockwise,
         ..Default::default()
     };
 
-    let car: Humvee = Humvee::new(&display);
+    // Skybox
+    // let skybox = skybox::Skybox::new(&display);
+    let square = load_square(&display);
+    let texture = load_tex!(display, "./2k_earth_daymap.jpg", jpeg, srgb);
+    let square_program = glium::Program::from_source(
+        &display,
+        "
+        #version 140
+        in vec3 position;
+        in vec2 tex_coords;
+        out vec2 v_position;
+        void main() {
+            v_position = tex_coords;
+            gl_Position = vec4(position, 1.0);
+        }
+        ",
+        "
+        #version 140
+        in vec2 v_position;
+        out vec4 f_color;
+        uniform sampler2D tex;
+        void main() {
+            f_color = texture(tex, v_position);
+        }
+        ",
+        None
+    ).unwrap();
+
+    // let car_texture = load_tex!(display, "car.png");
+
+    // let car: Humvee = Humvee::new(&display);
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -64,10 +97,45 @@ fn main() {
 
         set_wait(control_flow, 16_666_667);
 
-        car.draw(&mut target, &draw_params, &Transform::default());
+        target.draw(
+            &square,
+            &glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip),
+            &square_program,
+            &uniform! {
+                tex: &texture
+            },
+            &draw_params
+
+        ).unwrap();
+
+        // skybox.draw(&mut target, &draw_params, &Transform::default());
+
+        // car.draw(&mut target, &draw_params, &Transform::default());
 
         target.finish().unwrap();
     });
+}
+
+fn load_square(display: &Display) -> VertexBuffer<Vertex> {
+    let vertices = [
+        Vertex {
+            position: [-1., 1., 1.0],
+            tex_coords: [0.0, 0.0],
+        },
+        Vertex {
+            position: [1., 1., 1.0],
+            tex_coords: [1.0, 0.0],
+        },
+        Vertex {
+            position: [-1., -1., 1.0],
+            tex_coords: [0.0, 1.0],
+        },
+        Vertex {
+            position: [1., -1., 1.0],
+            tex_coords: [1.0, 1.0],
+        },
+    ];
+    VertexBuffer::new(display, &vertices).unwrap()
 }
 
 /// Defines the wait time for the next frame

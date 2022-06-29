@@ -9,7 +9,7 @@ out vec4 frag_texture;
 
 void main() {
     float brightness = dot(normalize(v_normal), normalize(light));
-    tex_color = texture(tex, v_tex_coords);
+    vec4 tex_color = texture(tex, v_tex_coords);
     vec3 darkest = 0.4 * tex_color.rgb;
     vec3 lightest = 1.0 * tex_color.rgb;
     frag_texture = vec4(mix(darkest, lightest, brightness), 1.0);
