@@ -11,9 +11,8 @@ mod vertex;
 mod model;
 mod transform;
 mod matrices;
-mod model_parser;
 
-use model::humvee::Humvee;
+use model::generic_model::GenericModel;
 use crate::transform::Transform;
 use crate::vertex::Light;
 
@@ -57,7 +56,7 @@ fn main() {
         ..Default::default()
     };
 
-    let car: Humvee = Humvee::new(&display);
+    let car: GenericModel = GenericModel::new(&display, "models/Humvee.obj".to_string());
     let mut rotate_x: f32 = 0.0;
     let mut rotate_y: f32 = 0.0;
 

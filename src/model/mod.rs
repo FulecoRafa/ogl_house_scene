@@ -1,11 +1,12 @@
 use glium::{Display, IndexBuffer, Program, VertexBuffer};
 use crate::transform::Transform;
-use crate::vertex::{Normal, Vertex, Light};
+use crate::vertex::{Light, Normal, Vertex};
 
-pub mod humvee;
+pub mod generic_model;
+mod model_parser;
 
-const VERT_SHADER: &str = include_str!("./shader.vert");
-const FRAG_SHADER: &str = include_str!("./shader.frag");
+const VERT_SHADER: &str = include_str!("shaders/shader.vert");
+const FRAG_SHADER: &str = include_str!("shaders/shader.frag");
 
 static mut PROGRAM: Option<Program> = None;
 pub fn set_program(display: &Display) {

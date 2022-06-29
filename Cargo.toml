@@ -8,11 +8,3 @@ edition = "2021"
 [dependencies]
 glium = { version = "0.31.0", features = ["default", "unstable"] }
 obj-rs = "0.7.0"
-
-[[example]]
-name = "codegen"
-path = "./src/codegen/main.rs"
-
-[dev-dependencies]
-obj-rs = "0.7.0"
-walkdir = "2.3.2"
