@@ -19,9 +19,9 @@ void main() {
     gl_Position =
     perspective *
     view *
-//    rotation *
-//    translation *
+    rotation *
+    translation *
     scale *
-//    self_rotation *
+    self_rotation *
     vec4(position, 1.0);
 }

@@ -4,6 +4,15 @@ use glium::glutin::event_loop::ControlFlow;
 use crate::glutin;
 use crate::glutin::event::KeyboardInput;
 
+fn normalize_vector(vector: &[f32; 3]) -> [f32; 3] {
+    let length = (vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]).sqrt();
+    [
+        vector[0] / length,
+        vector[1] / length,
+        vector[2] / length,
+    ]
+}
+
 fn cross_product(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
     [
         a[1] * b[2] - a[2] * b[1],
@@ -57,21 +66,80 @@ impl EventHandler {
                         return;
                     };
                     const STEP: f32 = 0.05;
+                    const ANGLE_STEP: f32 = 0.0005;
                     /// If the key is pressed, the value is changed
                     if let state = ElementState::Pressed {
-                        let cross = cross_product(direction, up);
+                        println!("pos: {:?}, dir: {:?}", position, direction);
+                        let norm_cross = normalize_vector(&cross_product(direction, up));
+                        let norm_direction = normalize_vector(direction);
                         /// Parses the pressed key and changes the value
                         match virtual_keycode {
-                            VirtualKeyCode::W => *position = [position[0] + direction[0] * STEP, position[1] + direction[1] * STEP, position[2] + direction[2] * STEP],
-                            VirtualKeyCode::A => *position = [position[0] + cross[0] * STEP, position[1] + cross[1] * STEP, position[2] + cross[2] * STEP],
-                            VirtualKeyCode::S => *position = [position[0] - direction[0] * STEP, position[1] - direction[1] * STEP, position[2] - direction[2] * STEP],
-                            VirtualKeyCode::D => *position = [position[0] - cross[0] * STEP, position[1] - cross[1] * STEP, position[2] - cross[2] * STEP],
+                            VirtualKeyCode::W => *position = [position[0] + norm_direction[0] * STEP, position[1] + norm_direction[1] * STEP, position[2] + norm_direction[2] * STEP],
+                            VirtualKeyCode::A => *position = [position[0] + norm_cross[0] * STEP, position[1] + norm_cross[1] * STEP, position[2] + norm_cross[2] * STEP],
+                            VirtualKeyCode::S => *position = [position[0] - norm_direction[0] * STEP, position[1] - norm_direction[1] * STEP, position[2] - norm_direction[2] * STEP],
+                            VirtualKeyCode::D => *position = [position[0] - norm_cross[0] * STEP, position[1] - norm_cross[1] * STEP, position[2] - norm_cross[2] * STEP],
                             VirtualKeyCode::J => *spin += STEP,
                             VirtualKeyCode::K => *spin -= STEP,
-                            VirtualKeyCode::Right => (*direction)[0] += STEP,
-                            VirtualKeyCode::Left => (*direction)[0] -= STEP,
-                            VirtualKeyCode::Up => (*direction)[1] += STEP,
-                            VirtualKeyCode::Down => (*direction)[1] -= STEP,
+                            VirtualKeyCode::Right => {
+                                let x = direction[0] - position[0];
+                                let y = direction[1] - position[1];
+                                let z = direction[2] - position[2];
+
+                                let mut theta = x.atan2(z);
+                                let len = (x * x + z * z).sqrt();
+                                theta += STEP;
+
+                                *direction = [
+                                    theta.sin() * len,
+                                    direction[1],
+                                    theta.cos() * len,
+                                ];
+                            }
+                            VirtualKeyCode::Left => {
+                                let x = direction[0] - position[0];
+                                let y = direction[1] - position[1];
+                                let z = direction[2] - position[2];
+
+                                let mut theta = x.atan2(z);
+                                let len = (x * x + z * z).sqrt();
+                                theta -= STEP;
+
+                                *direction = [
+                                    theta.sin() * len,
+                                    direction[1],
+                                    theta.cos() * len,
+                                ];
+                            }
+                            VirtualKeyCode::Up => {
+                                let x = direction[0] - position[0];
+                                let y = direction[1] - position[1];
+                                let z = direction[2] - position[2];
+
+                                let mut theta = y.atan2(z);
+                                let len = (y * y + z * z).sqrt();
+                                theta += STEP;
+
+                                *direction = [
+                                    direction[0],
+                                    theta.sin() * len,
+                                    theta.cos() * len,
+                                ];
+                            }
+                            VirtualKeyCode::Down => {
+                                let x = direction[0] - position[0];
+                                let y = direction[1] - position[1];
+                                let z = direction[2] - position[2];
+
+                                let mut theta = y.atan2(z);
+                                let len = (y * y + z * z).sqrt();
+                                theta -= STEP;
+
+                                *direction = [
+                                    direction[0],
+                                    theta.sin() * len,
+                                    theta.cos() * len,
+                                ];
+                            }
                             VirtualKeyCode::Numpad8 => (*position)[1] -= STEP,
                             VirtualKeyCode::Numpad2 => (*position)[1] += STEP,
                             VirtualKeyCode::Numpad4 => (*position)[0] += STEP,
