@@ -63,6 +63,7 @@ fn main() {
     let humvee = GenericModel::from_obj(&display, "models/Humvee.obj".to_string());
     let dragon = GenericModel::from_obj(&display, "models/Dragon.obj".to_string());
     let gas_station = GenericModel::from_obj(&display, "models/Station.obj".to_string());
+    let dennis = GenericModel::from_obj(&display, "models/rp_dennis_posed_004_30k.OBJ".to_string());
     let ground_vertices:Vec<Vertex> = vec![
         [-1.0, 0.0, -1.0],
         [1.0, 0.0, -1.0],
@@ -94,8 +95,9 @@ fn main() {
     };
 
     let humvee_pos = (0.1, 0.0, 0.1);
-    let dragon_pos = (-0.1, 0.3, -0.1);
+    let dragon_pos = (-0.1, 0.35, -0.1);
     let gas_station_pos = (0.1, 0.0, 0.0);
+    let dennis_pos = (-0.22, 0.0, 0.3);
 
 
     event_loop.run(move |event, _, control_flow| {
@@ -156,6 +158,20 @@ fn main() {
                 frame_dimensions: Some(dimensions),
                 ..Default::default()
             }
+        );
+
+        dennis.draw(
+            &mut target,
+            &draw_params,
+            &Transform{
+                rotate_self: [spin, 3.0, 0.],
+                scale: 0.13,
+                translation: [translate_x + dennis_pos.0, translate_y + dennis_pos.1, 0. + dennis_pos.2],
+                view: [position, direction, up],
+                frame_dimensions: Some(dimensions),
+                ..Default::default()
+            }
+
         );
 
         ground.draw(

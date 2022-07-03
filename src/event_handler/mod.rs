@@ -94,6 +94,7 @@ impl EventHandler {
                             VirtualKeyCode::J => *spin += STEP,
                             VirtualKeyCode::K => *spin -= STEP,
                             VirtualKeyCode::Right => {
+                                /// Translate direction to position
                                 let x = direction[0] - position[0];
                                 let y = direction[1] - position[1];
                                 let z = direction[2] - position[2];
