@@ -96,7 +96,7 @@ fn main() {
     };
 
     let humvee_pos = (0.1, 0.0, 0.1);
-    let dragon_pos = (-0.1, 0.35, -0.1);
+    let dragon_pos = (-0.1, 0.55, -0.1);
     let gas_station_pos = (0.1, 0.0, 0.0);
     let dennis_pos = (-0.22, 0.0, 0.3);
 
@@ -141,7 +141,7 @@ fn main() {
             &draw_params,
             &Transform{
                 rotate_self: [spin, tilt, 0.],
-                scale: 1.4,
+                scale: 2.4,
                 translation: [translate_x + dragon_pos.0, translate_y + dragon_pos.1, 0. + dragon_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
@@ -154,7 +154,7 @@ fn main() {
             &draw_params,
             &Transform{
                 rotate_self: [spin, tilt, 0.],
-                scale: 10.5,
+                scale: 17.5,
                 translation: [translate_x + gas_station_pos.0, translate_y + gas_station_pos.1, 0. + gas_station_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
