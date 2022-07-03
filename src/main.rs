@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate glium;
 
+use std::cmp::max;
 use glium::{Display, Surface};
 use glium::backend::glutin::DisplayCreationError;
 use glium::glutin;
@@ -14,7 +15,7 @@ use crate::assets::{
 };
 use crate::assets::vertex::{Normal, Vertex};
 use crate::event_handler::EventHandler;
-use crate::model::{Model, set_program};
+use crate::model::{get_light, get_light_rotation, Model, set_light, set_light_rotation, set_program};
 
 mod model;
 mod assets;
@@ -99,7 +100,6 @@ fn main() {
     let gas_station_pos = (0.1, 0.0, 0.0);
     let dennis_pos = (-0.22, 0.0, 0.3);
 
-
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
         target.clear_color_and_depth((0., 0., 1., 1.), 1.);
@@ -120,6 +120,8 @@ fn main() {
         } = event_handler;
 
         let dimensions = target.get_dimensions();
+        set_light_rotation(get_light_rotation() + 0.02);
+
 
         humvee.draw(
             &mut target,

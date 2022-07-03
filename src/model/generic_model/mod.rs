@@ -4,7 +4,7 @@ use crate::assets::{
     transform::*,
     vertex::*,
 };
-use crate::model::{get_light, Model, ModelData};
+use crate::model::{get_light, get_light_rotation_matrix, Model, ModelData};
 use crate::model::get_program;
 use crate::model::model_parser::parse_model;
 
@@ -49,6 +49,7 @@ impl Model for GenericModel {
             view: transform.get_view(),
             perspective: transform.get_perspective(),
             light: get_light(),
+            light_rotation: get_light_rotation_matrix(),
         };
         target.draw((&self.model_data.vertices, &self.model_data.normals), &self.model_data.indices, get_program().unwrap(), &uniforms, params).unwrap();
     }
