@@ -65,7 +65,7 @@ fn main() {
         ..Default::default()
     };
 
-    let humvee = GenericModel::from_obj(&display, "models/Humvee.obj".to_string());
+    let humvee = GenericModel::from_obj(&display, "models/bus.obj".to_string());
     let dragon = GenericModel::from_obj(&display, "models/Dragon.obj".to_string());
     let gas_station = GenericModel::from_obj(&display, "models/Station.obj".to_string());
     let dennis = GenericModel::from_obj(&display, "models/rp_dennis_posed_004_30k.OBJ".to_string());
@@ -114,6 +114,8 @@ fn main() {
     let altair_tex = load_tex!(&display, "../textures/kaleidoscope.jpg", jpg);
     let red_tex = load_tex!(&display, "../textures/Red.jpg", jpg);
     let dragon_tex = load_tex!(&display, "../textures/Dragon_ground_color.jpg", jpg);
+    let station_tex = load_tex!(&display, "../textures/gasstation red.png", png);
+    let bus_tex = load_tex!(&display, "../textures/bus_d.png", png);
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -143,11 +145,11 @@ fn main() {
             &draw_params,
             &Transform{
                 rotate_self: [spin, tilt, 0.],
-                scale: 0.2,
+                scale: 5.0,
                 translation: [translate_x + humvee_pos.0, translate_y + humvee_pos.1, 0. + humvee_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red_tex),
+                texture: Some(&bus_tex),
                 ..Default::default()
             }
         );
@@ -175,7 +177,7 @@ fn main() {
                 translation: [translate_x + gas_station_pos.0, translate_y + gas_station_pos.1, 0. + gas_station_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red_tex),
+                texture: Some(&station_tex),
                 ..Default::default()
             }
         );

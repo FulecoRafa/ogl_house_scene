@@ -18,6 +18,7 @@ pub struct Transform<'a> {
     pub frame_dimensions: Option<(u32, u32)>,
     // Texture
     pub texture: Option<&'a glium::texture::SrgbTexture2d>,
+
 }
 
 impl Default for Transform<'_> {
