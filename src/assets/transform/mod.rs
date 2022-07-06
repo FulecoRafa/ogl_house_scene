@@ -1,10 +1,9 @@
-use glium::Frame;
+use glium::{Frame, texture::SrgbTexture2d};
 use crate::{identity, rotate, scale, translate};
 use crate::assets::matrices::{perspective_matrix, view_matrix};
 
 /// Struct that holds the transform parameters of a drawable object.
-#[derive(Clone)]
-pub struct Transform {
+pub struct Transform<'a> {
     /// Translate in [x, y, z]
     pub translation: [f32; 3],
     /// Rotate in [x, y, z]
@@ -18,10 +17,10 @@ pub struct Transform {
     /// Frame
     pub frame_dimensions: Option<(u32, u32)>,
     // Texture
-    // pub texture: Option<glium::exture::T>,
+    pub texture: Option<&'a glium::texture::SrgbTexture2d>,
 }
 
-impl Default for Transform {
+impl Default for Transform<'_> {
     fn default() -> Self {
         Transform {
             translation: [0.0, 0.0, 0.0],
@@ -30,12 +29,12 @@ impl Default for Transform {
             scale: 0.25,
             view: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
             frame_dimensions: None,
-            // texture: None,
+            texture: None
         }
     }
 }
 
-impl Transform {
+impl Transform<'_> {
     pub fn get_translation(&self) -> [[f32; 4]; 4] {
         translate!(self.translation[0], self.translation[1], self.translation[2])
     }
@@ -61,5 +60,9 @@ impl Transform {
             Some(dim) => perspective_matrix(dim),
             None => identity!(),
         }
+    }
+
+    pub fn get_texture(&self) -> &SrgbTexture2d {
+        self.texture.unwrap()
     }
 }

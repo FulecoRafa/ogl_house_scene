@@ -1,17 +1,21 @@
 #[macro_use]
 extern crate glium;
+extern crate image;
 
-use std::cmp::max;
+use std::{cmp::max, include_bytes};
+use std::io::empty;
 use glium::{Display, Surface};
 use glium::backend::glutin::DisplayCreationError;
 use glium::glutin;
 use glium::glutin::event_loop::{ControlFlow, EventLoop};
+use glium::texture::SrgbTexture2d;
 
 use model::generic_model::GenericModel;
 
 use crate::assets::{
     transform::Transform,
     vertex::Light,
+    load_tex,
 };
 use crate::assets::vertex::{Normal, Vertex};
 use crate::event_handler::EventHandler;
@@ -66,6 +70,7 @@ fn main() {
     let gas_station = GenericModel::from_obj(&display, "models/Station.obj".to_string());
     let dennis = GenericModel::from_obj(&display, "models/rp_dennis_posed_004_30k.OBJ".to_string());
     let fabienne_percy = GenericModel::from_obj(&display, "models/rp_fabienne_percy_posed_001_60k.obj".to_string());
+    let altair = GenericModel::from_obj(&display, "models/assassins-creed-altair.obj".to_string());
 
     let ground_vertices:Vec<Vertex> = vec![
         [-1.0, 0.0, -1.0],
@@ -102,6 +107,9 @@ fn main() {
     let gas_station_pos = (0.1, 0.0, 0.0);
     let dennis_pos = (-0.22, 0.0, 0.3);
     let fabienne_pos = (-0.12, 0.0, 0.3);
+    let altair_pos = (-0.02, 0.0, 0.3);
+
+    let red = load_tex!(&display, "../textures/Red.jpg", jpg);
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -135,6 +143,7 @@ fn main() {
                 translation: [translate_x + humvee_pos.0, translate_y + humvee_pos.1, 0. + humvee_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
+                texture: Some(&red),
                 ..Default::default()
             }
         );
@@ -148,6 +157,7 @@ fn main() {
                 translation: [translate_x + dragon_pos.0, translate_y + dragon_pos.1, 0. + dragon_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
+                texture: Some(&red),
                 ..Default::default()
             }
         );
@@ -161,6 +171,7 @@ fn main() {
                 translation: [translate_x + gas_station_pos.0, translate_y + gas_station_pos.1, 0. + gas_station_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
+                texture: Some(&red),
                 ..Default::default()
             }
         );
@@ -174,6 +185,7 @@ fn main() {
                 translation: [translate_x + dennis_pos.0, translate_y + dennis_pos.1, 0. + dennis_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
+                texture: Some(&red),
                 ..Default::default()
             }
         );
@@ -187,6 +199,21 @@ fn main() {
                 translation: [translate_x + fabienne_pos.0, translate_y + fabienne_pos.1, 0. + fabienne_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
+                texture: Some(&red),
+                ..Default::default()
+            }
+        );
+
+        altair.draw(
+            &mut target,
+            &draw_params,
+            &Transform{
+                rotate_self: [spin, 3.0, 0.],
+                scale: 0.17,
+                translation: [translate_x + altair_pos.0, translate_y + altair_pos.1, 0. + altair_pos.2],
+                view: [position, direction, up],
+                frame_dimensions: Some(dimensions),
+                texture: Some(&red),
                 ..Default::default()
             }
         );
@@ -194,7 +221,10 @@ fn main() {
             ground.draw(
                 &mut target,
             &draw_params,
-            &Transform::default()
+            &Transform {
+                texture: Some(&red),
+                ..Default::default()
+            }
         );
 
 

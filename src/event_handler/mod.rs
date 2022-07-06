@@ -70,11 +70,11 @@ impl EventHandler {
                     const ANGLE_STEP: f32 = 0.1;
                     /// If the key is pressed, the value is changed
                     if let state = ElementState::Pressed {
-                        let pos_dir = [position[0] - direction[0], position[1] - direction[1], position[2] - direction[2]];
-                        let norm_cross = normalize_vector(&cross_product(direction, up));
+                        let pos_dir = [direction[0] - position[0], direction[1] - position[1], direction[2] - position[2]];
+                        let norm_direction = normalize_vector(&pos_dir);
+                        let norm_cross = normalize_vector(&cross_product(up, &pos_dir));
                         let norm_cross_2 = normalize_vector(&cross_product(&pos_dir, &norm_cross));
                         let norm_cross_3 = normalize_vector(&cross_product(&pos_dir, &up));
-                        let norm_direction = normalize_vector(direction);
                         println!("pos: {:?}, dir: {:?}, norm_cross: {:?}, norm_cross_2: {:?}, norm_cross_3: {:?}", position, direction, norm_cross, norm_cross_2, norm_cross_3);
                         /// Parses the pressed key and changes the value
                         match virtual_keycode {
