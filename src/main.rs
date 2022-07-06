@@ -65,12 +65,13 @@ fn main() {
         ..Default::default()
     };
 
-    let humvee = GenericModel::from_obj(&display, "models/bus.obj".to_string());
+    let bus = GenericModel::from_obj(&display, "models/bus.obj".to_string());
     let dragon = GenericModel::from_obj(&display, "models/Dragon.obj".to_string());
     let gas_station = GenericModel::from_obj(&display, "models/Station.obj".to_string());
     let dennis = GenericModel::from_obj(&display, "models/rp_dennis_posed_004_30k.OBJ".to_string());
     let fabienne_percy = GenericModel::from_obj(&display, "models/rp_fabienne_percy_posed_001_60k.obj".to_string());
     let altair = GenericModel::from_obj(&display, "models/assassins-creed-altair.obj".to_string());
+    let railgun = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
 
     let ground_vertices:Vec<Vertex> = vec![
         [-1.0, 0.0, -1.0],
@@ -102,12 +103,13 @@ fn main() {
         ..Default::default()
     };
 
-    let humvee_pos = (0.1, 0.0, 0.1);
+    let bus_pos = (0.1, 0.01, 0.1);
     let dragon_pos = (-0.1, 0.55, -0.1);
     let gas_station_pos = (0.1, 0.0, 0.0);
     let dennis_pos = (-0.22, 0.0, 0.3);
     let fabienne_pos = (-0.12, 0.0, 0.3);
-    let altair_pos = (-0.02, 0.0, 0.3);
+    let altair_pos = (-0.71, 0.0, -1.01);
+    let railgun_pos = (-0.31, 0.07, -1.02);
 
     let fabienne_tex = load_tex!(&display, "../textures/rp_fabienne_percy_posed_001_dif_2k.jpg", jpg);
     let dennis_tex = load_tex!(&display, "../textures/rp_dennis_posed_004_dif_2k.jpg", jpg);
@@ -116,6 +118,7 @@ fn main() {
     let dragon_tex = load_tex!(&display, "../textures/Dragon_ground_color.jpg", jpg);
     let station_tex = load_tex!(&display, "../textures/gasstation red.png", png);
     let bus_tex = load_tex!(&display, "../textures/bus_d.png", png);
+    let railgun_tex = load_tex!(&display, "../textures/Railgun_color.jpg", jpg);
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -140,13 +143,13 @@ fn main() {
         set_light_rotation(get_light_rotation() + 0.02);
 
 
-        humvee.draw(
+        bus.draw(
             &mut target,
             &draw_params,
             &Transform{
                 rotate_self: [spin, tilt, 0.],
                 scale: 5.0,
-                translation: [translate_x + humvee_pos.0, translate_y + humvee_pos.1, 0. + humvee_pos.2],
+                translation: [translate_x + bus_pos.0, translate_y + bus_pos.1, 0. + bus_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&bus_tex),
@@ -215,11 +218,25 @@ fn main() {
             &draw_params,
             &Transform{
                 rotate_self: [spin, 3.0, 0.],
-                scale: 0.17,
+                scale: 0.20,
                 translation: [translate_x + altair_pos.0, translate_y + altair_pos.1, 0. + altair_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&altair_tex),
+                ..Default::default()
+            }
+        );
+
+        railgun.draw(
+            &mut target,
+            &draw_params,
+            &Transform{
+                rotate_self: [spin, 3.0, 0.],
+                scale: 30.17,
+                translation: [translate_x + railgun_pos.0, translate_y + railgun_pos.1, 0. + railgun_pos.2],
+                view: [position, direction, up],
+                frame_dimensions: Some(dimensions),
+                texture: Some(&railgun_tex),
                 ..Default::default()
             }
         );
