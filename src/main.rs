@@ -109,7 +109,11 @@ fn main() {
     let fabienne_pos = (-0.12, 0.0, 0.3);
     let altair_pos = (-0.02, 0.0, 0.3);
 
-    let red = load_tex!(&display, "../textures/Red.jpg", jpg);
+    let fabienne_tex = load_tex!(&display, "../textures/rp_fabienne_percy_posed_001_dif_2k.jpg", jpg);
+    let dennis_tex = load_tex!(&display, "../textures/rp_dennis_posed_004_dif_2k.jpg", jpg);
+    let altair_tex = load_tex!(&display, "../textures/kaleidoscope.jpg", jpg);
+    let red_tex = load_tex!(&display, "../textures/Red.jpg", jpg);
+    let dragon_tex = load_tex!(&display, "../textures/Dragon_ground_color.jpg", jpg);
 
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
@@ -143,7 +147,7 @@ fn main() {
                 translation: [translate_x + humvee_pos.0, translate_y + humvee_pos.1, 0. + humvee_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red),
+                texture: Some(&red_tex),
                 ..Default::default()
             }
         );
@@ -157,7 +161,7 @@ fn main() {
                 translation: [translate_x + dragon_pos.0, translate_y + dragon_pos.1, 0. + dragon_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red),
+                texture: Some(&dragon_tex),
                 ..Default::default()
             }
         );
@@ -171,7 +175,7 @@ fn main() {
                 translation: [translate_x + gas_station_pos.0, translate_y + gas_station_pos.1, 0. + gas_station_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red),
+                texture: Some(&red_tex),
                 ..Default::default()
             }
         );
@@ -185,7 +189,7 @@ fn main() {
                 translation: [translate_x + dennis_pos.0, translate_y + dennis_pos.1, 0. + dennis_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red),
+                texture: Some(&dennis_tex),
                 ..Default::default()
             }
         );
@@ -199,7 +203,7 @@ fn main() {
                 translation: [translate_x + fabienne_pos.0, translate_y + fabienne_pos.1, 0. + fabienne_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red),
+                texture: Some(&fabienne_tex),
                 ..Default::default()
             }
         );
@@ -213,7 +217,7 @@ fn main() {
                 translation: [translate_x + altair_pos.0, translate_y + altair_pos.1, 0. + altair_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
-                texture: Some(&red),
+                texture: Some(&altair_tex),
                 ..Default::default()
             }
         );
@@ -222,7 +226,7 @@ fn main() {
                 &mut target,
             &draw_params,
             &Transform {
-                texture: Some(&red),
+                texture: Some(&red_tex),
                 ..Default::default()
             }
         );

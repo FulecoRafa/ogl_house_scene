@@ -4,13 +4,14 @@ uniform vec3 light;
 uniform mat4 light_rotation;
 uniform sampler2D tex;
 
+in vec2 v_tex_coords;
 in vec3 v_normal;
 in vec3 v_position;
 out vec4 color;
 
-const vec3 ambient_color = vec3(0.2, 0.0, 0.0);
-const vec3 diffuse_color = vec3(0.6, 0.0, 0.0);
-const vec3 specular_color = vec3(1.0, 1.0, 1.0);
+vec3 ambient_color = vec3(texture(tex, v_tex_coords));
+vec3 diffuse_color = ambient_color * 1.45;
+vec3 specular_color = ambient_color * 4.0;
 
 void main() {
     vec3 ulight = vec3(light_rotation * vec4(light, 1.0));

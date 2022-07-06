@@ -50,7 +50,7 @@ impl Model for GenericModel {
             perspective: transform.get_perspective(),
             light: get_light(),
             light_rotation: get_light_rotation_matrix(),
-            texture: transform.get_texture(),
+            tex: transform.get_texture(),
         };
         target.draw((&self.model_data.vertices, &self.model_data.normals), &self.model_data.indices, get_program().unwrap(), &uniforms, params).unwrap();
     }
