@@ -9,9 +9,9 @@ in vec3 v_normal;
 in vec3 v_position;
 out vec4 color;
 
-vec3 ambient_color = vec3(texture(tex, v_tex_coords)) * 0.65;
-vec3 diffuse_color = ambient_color * 1.65;
-vec3 specular_color = ambient_color * 4.2;
+vec3 ambient_color = vec3(texture(tex, v_tex_coords)) * 0.45;
+vec3 diffuse_color = ambient_color * 1.55;
+vec3 specular_color = ambient_color * 4.0;
 
 void main() {
     vec3 ulight = vec3(light_rotation * vec4(light, 1.0));

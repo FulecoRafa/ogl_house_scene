@@ -75,35 +75,35 @@ fn main() {
     let railgun = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
 
     let ground1_vertices:Vec<Vertex> = vec![
-        [-0.38, 0.0, -10.0],
-        [-0.38, 0.0, 10.0],
-        [-10.0, 0.0, 10.0],
-        [-10.0, 0.0, -10.0],
+        [-0.38, 0.0, -50.0],
+        [-0.38, 0.0, 50.0],
+        [-50.0, 0.0, 50.0],
+        [-50.0, 0.0, -50.0],
     ]
         .iter()
         .map(|v| {
             Vertex {
                 position: [v[0], v[1], v[2]],
                 tex_coords: [
-                    if v[2] == -10.0 { 0.0 } else { 1.0 },
-                    if v[0] == -10.0 { 0.0 } else { 1.0 },
+                    if v[2] == -50.0 { 0.0 } else { 1.0 },
+                    if v[0] == -50.0 { 0.0 } else { 1.0 },
                 ]
             }
         })
         .collect();
 
     let ground2_vertices:Vec<Vertex> = vec![
-        [0.98, 0.0, -10.0],
-        [0.98, 0.0, 10.0],
-        [10.0, 0.0, 10.0],
-        [10.0, 0.0, -10.0],
+        [0.98, 0.0, -50.0],
+        [0.98, 0.0, 50.0],
+        [50.0, 0.0, 50.0],
+        [50.0, 0.0, -50.0],
     ]
         .iter()
         .map(|v| {
             Vertex {
                 position: [v[0], v[1], v[2]],
                 tex_coords: [
-                    if v[2] == -10.0 { 0.0 } else { 1.0 },
+                    if v[2] == -50.0 { 0.0 } else { 1.0 },
                     if v[0] == 0.98 { 0.0 } else { 1.0 },
                 ]
             }
@@ -111,24 +111,116 @@ fn main() {
         .collect();
 
     let road_vertices:Vec<Vertex> = vec![
-        [-0.38, 0.0, -10.0],
-        [-0.38, 0.0, 10.0],
-        [0.98, 0.0, 10.0],
-        [0.98, 0.0, -10.0],
+        [-0.38, 0.0, -50.0],
+        [-0.38, 0.0, 50.0],
+        [0.98, 0.0, 50.0],
+        [0.98, 0.0, -50.0],
     ]
         .iter()
         .map(|v| {
             Vertex {
                 position: [v[0], v[1], v[2]],
                 tex_coords: [
-                    if v[2] == -10.0 { 0.0 } else { 1.0 },
+                    if v[2] == -50.0 { 0.0 } else { 1.0 },
                     if v[0] == -0.38 { 0.0 } else { 1.0 },
                 ]
             }
         })
         .collect();
 
-    let ground_normals: Vec<Normal> = vec![[0.0, 1.0, 0.0]; 3]
+    let skybox_left_vertices: Vec<Vertex> = vec![
+        [-50.0, -50.0, -50.0],
+        [-50.0, -50.0, 50.0],
+        [-50.0, 50.0, 50.0],
+        [-50.0, 50.0, -50.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[2] == -50.0 { 0.001 } else { 0.2499 },
+                    if v[1] == -50.0 { 0.32999 } else { 0.65999 },
+                ]
+            }
+        })
+        .collect();
+
+    // Vertices of the front face of a cube of size 20
+    let skybox_front_vertices: Vec<Vertex> = vec![
+        [-50.0, -50.0, 50.0],
+        [50.0, -50.0, 50.0],
+        [50.0, 50.0, 50.0],
+        [-50.0, 50.0, 50.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[0] == -50.0 { 0.24999 } else { 0.49999 },
+                    if v[1] == -50.0 { 0.32999 } else { 0.65999 },
+                ],
+            }
+        })
+        .collect();
+
+    let skybox_top_vertices: Vec<Vertex> = vec![
+        [-50.0, 50.0, 50.0],
+        [50.0, 50.0, 50.0],
+        [50.0, 50.0, -50.0],
+        [-50.0, 50.0, -50.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[0] == -50.0 { 0.2499 } else { 0.499 },
+                    if v[2] == 50.0 { 0.6599 } else { 0.999 },
+                ],
+            }
+        })
+        .collect();
+
+    let skybox_right_vertices: Vec<Vertex> = vec![
+        [50.0, -50.0, -50.0],
+        [50.0, 50.0, -50.0],
+        [50.0, 50.0, 50.0],
+        [50.0, -50.0, 50.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[2] == 50.0 { 0.4999 } else { 0.7499 },
+                    if v[1] == -50.0 { 0.32999 } else { 0.65999 },
+                ],
+            }
+        })
+        .collect();
+
+    let skybox_back_vertices: Vec<Vertex> = vec![
+        [-50.0, -50.0, -50.0],
+        [50.0, -50.0, -50.0],
+        [50.0, 50.0, -50.0],
+        [-50.0, 50.0, -50.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[0] == 50.0 { 0.74999 } else { 1.0 },
+                    if v[1] == -50.0 { 0.32999 } else { 0.65999 },
+                ],
+            }
+        })
+        .collect();
+
+
+    let ground_normals: Vec<Normal> = vec![[0.0, 1.0, 0.0]; 4]
         .iter()
         .map(|n| {
             Normal {
@@ -136,9 +228,24 @@ fn main() {
             }
         })
         .collect();
+
+    let sky_normals: Vec<Normal> = (0..4)
+        .map(|n| {
+            Normal {
+                normal: [0.0; 3]
+            }
+        })
+        .collect();
+
     let ground1 = GenericModel::new(&display, &ground1_vertices, &vec![0, 1, 2, 2, 3, 0], &ground_normals);
     let ground2 = GenericModel::new(&display, &ground2_vertices, &vec![0, 1, 2, 2, 3, 0], &ground_normals);
     let road = GenericModel::new(&display, &road_vertices, &vec![0, 1, 2, 2, 3, 0], &ground_normals);
+    let skybox_left = GenericModel::new(&display, &skybox_left_vertices, &vec![0, 1, 2, 2, 3, 0], &sky_normals);
+    let skybox_front = GenericModel::new(&display, &skybox_front_vertices, &vec![0, 1, 2, 2, 3, 0], &sky_normals);
+    let skybox_top = GenericModel::new(&display, &skybox_top_vertices, &vec![0, 1, 2, 2, 3, 0], &sky_normals);
+    let skybox_right = GenericModel::new(&display, &skybox_right_vertices, &vec![0, 1, 2, 2, 3, 0], &sky_normals);
+    let skybox_back = GenericModel::new(&display, &skybox_back_vertices, &vec![0, 1, 2, 2, 3, 0], &sky_normals);
+
 
     let mut event_handler = EventHandler{
         grow: 0.1,
@@ -156,12 +263,13 @@ fn main() {
     let fabienne_tex = load_tex!(&display, "../textures/rp_fabienne_percy_posed_001_dif_2k.jpg", jpg);
     let dennis_tex = load_tex!(&display, "../textures/rp_dennis_posed_004_dif_2k.jpg", jpg);
     let altair_tex = load_tex!(&display, "../textures/kaleidoscope.jpg", jpg);
-    let ground_tex = load_tex!(&display, "../textures/ground.jpg", jpg);
+    let ground_tex = load_tex!(&display, "../textures/grass.png", png);
     let dragon_tex = load_tex!(&display, "../textures/Dragon_ground_color.jpg", jpg);
     let station_tex = load_tex!(&display, "../textures/gasstation red.png", png);
     let bus_tex = load_tex!(&display, "../textures/bus_d.png", png);
     let railgun_tex = load_tex!(&display, "../textures/Railgun_color.jpg", jpg);
     let road_tex = load_tex!(&display, "../textures/road.jpg", jpg);
+    let sky_tex = load_tex!(&display, "../textures/dawn.jpg", jpg);
 
     let mut dragon_spin_self = 0.0f32;
     let mut dragon_spin_around = 0.0f32;
@@ -326,6 +434,61 @@ fn main() {
             &draw_params,
             &Transform {
                 texture: Some(&road_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
+
+        skybox_left.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&sky_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
+
+        skybox_right.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&sky_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
+
+        skybox_top.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&sky_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
+
+        skybox_back.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&sky_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
+
+        skybox_front.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&sky_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
                 ..Default::default()
