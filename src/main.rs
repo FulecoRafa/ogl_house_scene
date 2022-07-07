@@ -4,6 +4,7 @@ extern crate image;
 
 use std::{cmp::max, include_bytes};
 use std::io::empty;
+
 use glium::{Display, Surface};
 use glium::backend::glutin::DisplayCreationError;
 use glium::glutin;
@@ -13,9 +14,9 @@ use glium::texture::SrgbTexture2d;
 use model::generic_model::GenericModel;
 
 use crate::assets::{
+    load_tex,
     transform::Transform,
     vertex::Light,
-    load_tex,
 };
 use crate::assets::vertex::{Normal, Vertex};
 use crate::event_handler::EventHandler;
@@ -73,20 +74,60 @@ fn main() {
     let altair = GenericModel::from_obj(&display, "models/assassins-creed-altair.obj".to_string());
     let railgun = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
 
-    let ground_vertices:Vec<Vertex> = vec![
-        [-1.0, 0.0, 1.0],
-        [-1.0, 0.0, -1.0],
-        [1.0, 0.0, 1.0],
-        [1.0, 0.0, -1.0],
+    let ground1_vertices:Vec<Vertex> = vec![
+        [-0.38, 0.0, -10.0],
+        [-0.38, 0.0, 10.0],
+        [-10.0, 0.0, 10.0],
+        [-10.0, 0.0, -10.0],
     ]
         .iter()
         .map(|v| {
             Vertex {
                 position: [v[0], v[1], v[2]],
-                tex_coords: [0.0, 0.0]
+                tex_coords: [
+                    if v[2] == -10.0 { 0.0 } else { 1.0 },
+                    if v[0] == -10.0 { 0.0 } else { 1.0 },
+                ]
             }
         })
         .collect();
+
+    let ground2_vertices:Vec<Vertex> = vec![
+        [0.98, 0.0, -10.0],
+        [0.98, 0.0, 10.0],
+        [10.0, 0.0, 10.0],
+        [10.0, 0.0, -10.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[2] == -10.0 { 0.0 } else { 1.0 },
+                    if v[0] == 0.98 { 0.0 } else { 1.0 },
+                ]
+            }
+        })
+        .collect();
+
+    let road_vertices:Vec<Vertex> = vec![
+        [-0.38, 0.0, -10.0],
+        [-0.38, 0.0, 10.0],
+        [0.98, 0.0, 10.0],
+        [0.98, 0.0, -10.0],
+    ]
+        .iter()
+        .map(|v| {
+            Vertex {
+                position: [v[0], v[1], v[2]],
+                tex_coords: [
+                    if v[2] == -10.0 { 0.0 } else { 1.0 },
+                    if v[0] == -0.38 { 0.0 } else { 1.0 },
+                ]
+            }
+        })
+        .collect();
+
     let ground_normals: Vec<Normal> = vec![[0.0, 1.0, 0.0]; 3]
         .iter()
         .map(|n| {
@@ -95,8 +136,9 @@ fn main() {
             }
         })
         .collect();
-    let ground = GenericModel::new(&display, &ground_vertices, &vec![3, 2, 1], &ground_normals);
-
+    let ground1 = GenericModel::new(&display, &ground1_vertices, &vec![0, 1, 2, 2, 3, 0], &ground_normals);
+    let ground2 = GenericModel::new(&display, &ground2_vertices, &vec![0, 1, 2, 2, 3, 0], &ground_normals);
+    let road = GenericModel::new(&display, &road_vertices, &vec![0, 1, 2, 2, 3, 0], &ground_normals);
 
     let mut event_handler = EventHandler{
         grow: 0.1,
@@ -114,11 +156,12 @@ fn main() {
     let fabienne_tex = load_tex!(&display, "../textures/rp_fabienne_percy_posed_001_dif_2k.jpg", jpg);
     let dennis_tex = load_tex!(&display, "../textures/rp_dennis_posed_004_dif_2k.jpg", jpg);
     let altair_tex = load_tex!(&display, "../textures/kaleidoscope.jpg", jpg);
-    let red_tex = load_tex!(&display, "../textures/Red.jpg", jpg);
+    let ground_tex = load_tex!(&display, "../textures/ground.jpg", jpg);
     let dragon_tex = load_tex!(&display, "../textures/Dragon_ground_color.jpg", jpg);
     let station_tex = load_tex!(&display, "../textures/gasstation red.png", png);
     let bus_tex = load_tex!(&display, "../textures/bus_d.png", png);
     let railgun_tex = load_tex!(&display, "../textures/Railgun_color.jpg", jpg);
+    let road_tex = load_tex!(&display, "../textures/road.jpg", jpg);
 
     let mut dragon_spin_self = 0.0f32;
     let mut dragon_spin_around = 0.0f32;
@@ -137,9 +180,9 @@ fn main() {
         event_handler.handle_event(event, control_flow);
         dragon_spin_self += 0.001;
         dragon_spin_around += 0.01;
-        bus_translate_z += 0.0001;
-        fabienne_translate_x -= 0.00005;
-        dennis_translate_x -= 0.000075;
+        bus_translate_z += if bus_pos.2 + bus_translate_z < 2.2 {0.0001} else {0.0};
+        fabienne_translate_x -= if fabienne_translate_x + fabienne_pos.0 > -1.9 {0.00005} else {0.0};
+        dennis_translate_x -= if dennis_translate_x + dennis_pos.0 > -2.2 {0.000075} else {0.0};
         railgun_spin_self += 0.01;
         altair_spin_self -= 0.01;
 
@@ -156,7 +199,6 @@ fn main() {
 
         let dimensions = target.get_dimensions();
         set_light_rotation(get_light_rotation() + 0.02);
-
 
         bus.draw(
             &mut target,
@@ -257,15 +299,38 @@ fn main() {
             }
         );
 
-            ground.draw(
-                &mut target,
+        ground1.draw(
+            &mut target,
             &draw_params,
             &Transform {
-                texture: Some(&red_tex),
+                texture: Some(&ground_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
                 ..Default::default()
             }
         );
 
+        ground2.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&ground_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
+
+        road.draw(
+            &mut target,
+            &draw_params,
+            &Transform {
+                texture: Some(&road_tex),
+                frame_dimensions: Some(dimensions),
+                view: [position, direction, up],
+                ..Default::default()
+            }
+        );
 
         target.finish().unwrap();
     });

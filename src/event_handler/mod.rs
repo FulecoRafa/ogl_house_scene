@@ -34,6 +34,10 @@ fn vec_scal_mul(vector: &[f32; 3], scalar: f32) -> [f32; 3] {
     [vector[0] * scalar, vector[1] * scalar, vector[2] * scalar]
 }
 
+fn is_inbounds(position: &[f32; 3]) -> bool {
+    return position[0] >= -2.2 && position[0] <= 2.2 && position[1] >= 0.1 && position[1] <= 2.2 && position[2] >= -2.2 && position[2] <= 2.2;
+}
+
 /// Struct that handles the events of the window.
 pub struct EventHandler {
     pub grow: f32,
@@ -88,20 +92,32 @@ impl EventHandler {
                         /// Parses the pressed key and changes the value
                         match virtual_keycode {
                             VirtualKeyCode::W => {
-                                *position = add_vectors(&position, &vec_scal_mul(&camera_facing, STEP));
-                                *direction = add_vectors(&direction, &vec_scal_mul(&camera_facing, STEP));
+                                let new_position = add_vectors(&position, &vec_scal_mul(&camera_facing, STEP));
+                                if is_inbounds(&new_position) {
+                                    *position = new_position;
+                                    *direction = add_vectors(&direction, &vec_scal_mul(&camera_facing, STEP));
+                                }
                             },
                             VirtualKeyCode::A => {
-                                *position = add_vectors(&position, &vec_scal_mul(&camera_facing_orth, STEP));
-                                *direction = add_vectors(&direction, &vec_scal_mul(&camera_facing_orth, STEP));
+                                let new_position = add_vectors(&position, &vec_scal_mul(&camera_facing_orth, STEP));
+                                if is_inbounds(&new_position) {
+                                    *position = new_position;
+                                    *direction = add_vectors(&direction, &vec_scal_mul(&camera_facing_orth, STEP));
+                                }
                             }
                             VirtualKeyCode::S => {
-                                *position = sub_vectors(&position, &vec_scal_mul(&camera_facing, STEP));
-                                *direction = sub_vectors(&direction, &vec_scal_mul(&camera_facing, STEP));
+                                let new_position = sub_vectors(&position, &vec_scal_mul(&camera_facing, STEP));
+                                if is_inbounds(&new_position) {
+                                    *position = new_position;
+                                    *direction = sub_vectors(&direction, &vec_scal_mul(&camera_facing, STEP));
+                                }
                             }
                             VirtualKeyCode::D => {
-                                *position = sub_vectors(&position, &vec_scal_mul(&camera_facing_orth, STEP));
-                                *direction = sub_vectors(&direction, &vec_scal_mul(&camera_facing_orth, STEP));
+                                let new_position = sub_vectors(&position, &vec_scal_mul(&camera_facing_orth, STEP));
+                                if is_inbounds(&new_position) {
+                                    *position = new_position;
+                                    *direction = sub_vectors(&direction, &vec_scal_mul(&camera_facing_orth, STEP));
+                                }
                             }
                             VirtualKeyCode::J => *spin += STEP,
                             VirtualKeyCode::K => *spin -= STEP,
@@ -160,7 +176,7 @@ impl Default for EventHandler {
             translate_x: 0.0,
             translate_y: 0.0,
             direction: [0.0, 0.0, 1.0],
-            position: [0.0, 0.0, 0.0],
+            position: [0.0, 0.1, 0.0],
             up: [0.0, 1.0, 0.0],
         }
     }
