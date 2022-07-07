@@ -74,10 +74,10 @@ fn main() {
     let railgun = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
 
     let ground_vertices:Vec<Vertex> = vec![
-        [-1.0, 0.0, -1.0],
-        [1.0, 0.0, -1.0],
-        [1.0, 0.0, 1.0],
         [-1.0, 0.0, 1.0],
+        [-1.0, 0.0, -1.0],
+        [1.0, 0.0, 1.0],
+        [1.0, 0.0, -1.0],
     ]
         .iter()
         .map(|v| {
@@ -95,7 +95,7 @@ fn main() {
             }
         })
         .collect();
-    let ground = GenericModel::new(&display, &ground_vertices, &vec![0, 1, 2, 1, 2, 3], &ground_normals);
+    let ground = GenericModel::new(&display, &ground_vertices, &vec![3, 2, 1], &ground_normals);
 
 
     let mut event_handler = EventHandler{
@@ -104,7 +104,7 @@ fn main() {
     };
 
     let bus_pos = (0.1, 0.01, 0.1);
-    let dragon_pos = (-0.1, 0.55, -0.1);
+    let dragon_pos = (0.6, 0.55, -0.1);
     let gas_station_pos = (0.1, 0.0, 0.0);
     let dennis_pos = (-0.22, 0.0, 0.3);
     let fabienne_pos = (-0.12, 0.0, 0.3);
@@ -120,6 +120,14 @@ fn main() {
     let bus_tex = load_tex!(&display, "../textures/bus_d.png", png);
     let railgun_tex = load_tex!(&display, "../textures/Railgun_color.jpg", jpg);
 
+    let mut dragon_spin_self = 0.0f32;
+    let mut dragon_spin_around = 0.0f32;
+    let mut bus_translate_z = 0.0f32;
+    let mut dennis_translate_x = 0.0f32;
+    let mut fabienne_translate_x = 0.0f32;
+    let mut railgun_spin_self = 0.0f32;
+    let mut altair_spin_self = 0.0f32;
+
     event_loop.run(move |event, _, control_flow| {
         let mut target = display.draw();
         target.clear_color_and_depth((0., 0., 1., 1.), 1.);
@@ -127,6 +135,13 @@ fn main() {
         set_wait(control_flow, 16_666_667);
 
         event_handler.handle_event(event, control_flow);
+        dragon_spin_self += 0.001;
+        dragon_spin_around += 0.01;
+        bus_translate_z += 0.0001;
+        fabienne_translate_x -= 0.00005;
+        dennis_translate_x -= 0.000075;
+        railgun_spin_self += 0.01;
+        altair_spin_self -= 0.01;
 
         let EventHandler {
             grow,
@@ -149,7 +164,7 @@ fn main() {
             &Transform{
                 rotate_self: [spin, tilt, 0.],
                 scale: 5.0,
-                translation: [translate_x + bus_pos.0, translate_y + bus_pos.1, 0. + bus_pos.2],
+                translation: [bus_pos.0, bus_pos.1, bus_pos.2 + bus_translate_z],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&bus_tex),
@@ -161,9 +176,10 @@ fn main() {
             &mut target,
             &draw_params,
             &Transform{
-                rotate_self: [spin, tilt, 0.],
+                rotation: [0., dragon_spin_around, 0.],
+                rotate_self: [spin, dragon_spin_self, 0.],
                 scale: 2.4,
-                translation: [translate_x + dragon_pos.0, translate_y + dragon_pos.1, 0. + dragon_pos.2],
+                translation: [dragon_pos.0, dragon_pos.1, dragon_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&dragon_tex),
@@ -191,7 +207,7 @@ fn main() {
             &Transform{
                 rotate_self: [spin, 3.0, 0.],
                 scale: 0.13,
-                translation: [translate_x + dennis_pos.0, translate_y + dennis_pos.1, 0. + dennis_pos.2],
+                translation: [dennis_translate_x + dennis_pos.0, dennis_pos.1, dennis_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&dennis_tex),
@@ -205,7 +221,7 @@ fn main() {
             &Transform{
                 rotate_self: [spin, 3.0, 0.],
                 scale: 0.13,
-                translation: [translate_x + fabienne_pos.0, translate_y + fabienne_pos.1, 0. + fabienne_pos.2],
+                translation: [fabienne_translate_x + fabienne_pos.0, fabienne_pos.1, fabienne_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&fabienne_tex),
@@ -217,9 +233,9 @@ fn main() {
             &mut target,
             &draw_params,
             &Transform{
-                rotate_self: [spin, 3.0, 0.],
-                scale: 0.20,
-                translation: [translate_x + altair_pos.0, translate_y + altair_pos.1, 0. + altair_pos.2],
+                rotate_self: [spin, altair_spin_self, 0.],
+                scale: 0.30,
+                translation: [altair_pos.0, altair_pos.1, altair_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&altair_tex),
@@ -231,9 +247,9 @@ fn main() {
             &mut target,
             &draw_params,
             &Transform{
-                rotate_self: [spin, 3.0, 0.],
+                rotate_self: [spin, railgun_spin_self, 0.],
                 scale: 30.17,
-                translation: [translate_x + railgun_pos.0, translate_y + railgun_pos.1, 0. + railgun_pos.2],
+                translation: [railgun_pos.0, railgun_pos.1, railgun_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&railgun_tex),
