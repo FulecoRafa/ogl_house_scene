@@ -72,7 +72,8 @@ fn main() {
     let dennis = GenericModel::from_obj(&display, "models/rp_dennis_posed_004_30k.OBJ".to_string());
     let fabienne_percy = GenericModel::from_obj(&display, "models/rp_fabienne_percy_posed_001_60k.obj".to_string());
     let altair = GenericModel::from_obj(&display, "models/assassins-creed-altair.obj".to_string());
-    let railgun = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
+    let railgun1 = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
+    let railgun2 = GenericModel::from_obj(&display, "models/Railgun_Prototype-Wavefront OBJ.obj".to_string());
 
     let ground1_vertices:Vec<Vertex> = vec![
         [-0.38, 0.0, -50.0],
@@ -258,7 +259,8 @@ fn main() {
     let dennis_pos = (-0.22, 0.0, 0.3);
     let fabienne_pos = (-0.12, 0.0, 0.3);
     let altair_pos = (-0.71, 0.0, -1.01);
-    let railgun_pos = (-0.31, 0.07, -1.02);
+    let railgun1_pos = (-0.21, 0.07, -1.02);
+    let railgun2_pos = (-0.41, 0.07, -1.02);
 
     let fabienne_tex = load_tex!(&display, "../textures/rp_fabienne_percy_posed_001_dif_2k.jpg", jpg);
     let dennis_tex = load_tex!(&display, "../textures/rp_dennis_posed_004_dif_2k.jpg", jpg);
@@ -303,7 +305,10 @@ fn main() {
             translate_y,
             direction,
             position,
-            up
+            up,
+            zfar,
+            znear,
+            fov,
         } = event_handler;
 
         let dimensions = target.get_dimensions();
@@ -319,6 +324,9 @@ fn main() {
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&bus_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -334,6 +342,9 @@ fn main() {
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&dragon_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -348,6 +359,9 @@ fn main() {
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&station_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -362,6 +376,9 @@ fn main() {
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&dennis_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -376,6 +393,9 @@ fn main() {
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&fabienne_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -390,20 +410,43 @@ fn main() {
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&altair_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
 
-        railgun.draw(
+        railgun1.draw(
             &mut target,
             &draw_params,
             &Transform{
                 rotate_self: [spin, railgun_spin_self, 0.],
                 scale: 30.17,
-                translation: [railgun_pos.0, railgun_pos.1, railgun_pos.2],
+                translation: [railgun1_pos.0, railgun1_pos.1, railgun1_pos.2],
                 view: [position, direction, up],
                 frame_dimensions: Some(dimensions),
                 texture: Some(&railgun_tex),
+                zfar,
+                znear,
+                fov,
+                ..Default::default()
+            }
+        );
+
+        railgun2.draw(
+            &mut target,
+            &draw_params,
+            &Transform{
+                rotate_self: [spin, railgun_spin_self, 0.],
+                scale: 30.17,
+                translation: [railgun2_pos.0, railgun2_pos.1, railgun2_pos.2],
+                view: [position, direction, up],
+                frame_dimensions: Some(dimensions),
+                texture: Some(&railgun_tex),
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -415,6 +458,9 @@ fn main() {
                 texture: Some(&ground1_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -426,6 +472,9 @@ fn main() {
                 texture: Some(&ground2_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -437,6 +486,9 @@ fn main() {
                 texture: Some(&road_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -448,6 +500,9 @@ fn main() {
                 texture: Some(&sky_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -459,6 +514,9 @@ fn main() {
                 texture: Some(&sky_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -470,6 +528,9 @@ fn main() {
                 texture: Some(&sky_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -481,6 +542,9 @@ fn main() {
                 texture: Some(&sky_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );
@@ -492,6 +556,9 @@ fn main() {
                 texture: Some(&sky_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
+                zfar,
+                znear,
+                fov,
                 ..Default::default()
             }
         );

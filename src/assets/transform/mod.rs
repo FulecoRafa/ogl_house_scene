@@ -1,3 +1,4 @@
+use std::f32::consts::PI;
 use glium::{Frame, texture::SrgbTexture2d};
 use crate::{identity, rotate, scale, translate};
 use crate::assets::matrices::{perspective_matrix, view_matrix};
@@ -18,6 +19,12 @@ pub struct Transform<'a> {
     pub frame_dimensions: Option<(u32, u32)>,
     // Texture
     pub texture: Option<&'a glium::texture::SrgbTexture2d>,
+    // Zfar
+    pub zfar: f32,
+    // Znear
+    pub znear: f32,
+    // fov
+    pub fov: f32,
 
 }
 
@@ -30,7 +37,10 @@ impl Default for Transform<'_> {
             scale: 0.25,
             view: [[1.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]],
             frame_dimensions: None,
-            texture: None
+            texture: None,
+            zfar: 1024.0,
+            znear: 0.1,
+            fov: PI / 3.0,
         }
     }
 }
@@ -58,7 +68,7 @@ impl Transform<'_> {
 
     pub fn get_perspective(&self) -> [[f32; 4]; 4] {
         match self.frame_dimensions {
-            Some(dim) => perspective_matrix(dim),
+            Some(dim) => perspective_matrix(dim, self.fov, self.zfar, self.znear),
             None => identity!(),
         }
     }

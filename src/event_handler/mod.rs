@@ -45,14 +45,18 @@ pub struct EventHandler {
     pub spin: f32,
     pub translate_x: f32,
     pub translate_y: f32,
+    pub zfar: f32,
+    pub znear: f32,
+    pub fov: f32,
     pub direction: [f32; 3],
     pub position: [f32; 3],
     pub up: [f32; 3],
 }
 
 impl EventHandler {
-    pub fn new(grow: f32, tilt: f32, spin: f32, translate_x: f32, translate_y: f32, direction: [f32; 3], position: [f32; 3], up: [f32; 3]) -> Self {
-        EventHandler {grow, tilt, spin, translate_x, translate_y, direction, position, up}
+    pub fn new(grow: f32, tilt: f32, spin: f32, translate_x: f32, translate_y: f32, zfar: f32, znear: f32, fov: f32,
+               direction: [f32; 3], position: [f32; 3], up: [f32; 3]) -> Self {
+        EventHandler {grow, tilt, spin, translate_x, translate_y, zfar, znear, fov, direction, position, up}
     }
 
     /// Method that handles the keyboard input
@@ -64,6 +68,9 @@ impl EventHandler {
             ref mut spin,
             ref mut translate_x,
             ref mut translate_y,
+            ref mut zfar,
+            ref mut znear,
+            ref mut fov,
             ref mut direction,
             ref mut position,
             ref mut up,
@@ -132,7 +139,25 @@ impl EventHandler {
                             }
                             VirtualKeyCode::Down => {
                                 *direction = sub_vectors(&direction, &camera_vert_vec);
-                            }
+                            },
+                            VirtualKeyCode::F1 => {
+                                *zfar += 0.4;
+                            },
+                            VirtualKeyCode::F2 => {
+                                *zfar -= 0.4;
+                            },
+                            VirtualKeyCode::F3 => {
+                                *znear += 0.1;
+                            },
+                            VirtualKeyCode::F4 => {
+                                *znear -= 0.1;
+                            },
+                            VirtualKeyCode::F5 => {
+                                *fov += 0.01;
+                            },
+                            VirtualKeyCode::F6 => {
+                                *fov -= 0.01;
+                            },
                             _ => (),
                         }
                     }
@@ -178,6 +203,9 @@ impl Default for EventHandler {
             direction: [0.0, 0.0, 1.0],
             position: [0.0, 0.1, 0.0],
             up: [0.0, 1.0, 0.0],
+            zfar: 30.0,
+            znear: 0.1,
+            fov: PI / 3.0,
         }
     }
 }

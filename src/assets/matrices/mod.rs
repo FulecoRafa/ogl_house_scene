@@ -106,21 +106,17 @@ macro_rules! identity {
 }
 
 /// Function that generates the perspective matrix
-pub fn perspective_matrix(dimensions: (u32, u32)) -> [[f32; 4]; 4] {
+pub fn perspective_matrix(dimensions: (u32, u32), fov: f32, zfar: f32, znear: f32) -> [[f32; 4]; 4] {
     let (width, height) = dimensions;
     let aspect_ratio = height as f32 / width as f32;
 
-    const FOV: f32 = PI / 3.0;
-    const ZFAR: f32 = 1024.0;
-    const ZNEAR: f32 = 0.1;
-
-    let f: f32 = 1.0 / (FOV / 2.0).tan();
+    let f: f32 = 1.0 / (fov / 2.0).tan();
 
     [
         [f * aspect_ratio, 0.0, 0.0, 0.0],
         [0.0, f, 0.0, 0.0],
-        [0.0, 0.0, (ZFAR + ZNEAR) / (ZFAR - ZNEAR), 1.0],
-        [0.0, 0.0, -(2.0 * ZFAR * ZNEAR) / (ZFAR - ZNEAR), 0.0],
+        [0.0, 0.0, (zfar + znear) / (zfar - znear), 1.0],
+        [0.0, 0.0, -(2.0 * zfar * znear) / (zfar - znear), 0.0],
     ]
 }
 
