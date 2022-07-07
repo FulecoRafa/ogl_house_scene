@@ -22,6 +22,18 @@ fn cross_product(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
     ]
 }
 
+fn add_vectors(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
+    [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
+}
+
+fn sub_vectors(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
+    [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
+}
+
+fn vec_scal_mul(vector: &[f32; 3], scalar: f32) -> [f32; 3] {
+    [vector[0] * scalar, vector[1] * scalar, vector[2] * scalar]
+}
+
 /// Struct that handles the events of the window.
 pub struct EventHandler {
     pub grow: f32,
@@ -67,60 +79,44 @@ impl EventHandler {
                         return;
                     };
                     const STEP: f32 = 0.05;
-                    const ANGLE_STEP: f32 = 0.1;
                     /// If the key is pressed, the value is changed
                     if let state = ElementState::Pressed {
-                        let pos_dir = [direction[0] - position[0], direction[1] - position[1], direction[2] - position[2]];
-                        let norm_direction = normalize_vector(&pos_dir);
-                        let norm_cross = normalize_vector(&cross_product(up, &pos_dir));
-                        let norm_cross_2 = normalize_vector(&cross_product(&pos_dir, &norm_cross));
-                        let norm_cross_3 = normalize_vector(&cross_product(&pos_dir, &up));
-                        println!("pos: {:?}, dir: {:?}, norm_cross: {:?}, norm_cross_2: {:?}, norm_cross_3: {:?}", position, direction, norm_cross, norm_cross_2, norm_cross_3);
+                        let camera_facing = normalize_vector(&sub_vectors(&direction, &position));
+                        let camera_facing_orth = normalize_vector(&cross_product(&camera_facing, &up));
+                        let camera_vert_vec = normalize_vector(&cross_product(&camera_facing_orth, &camera_facing));
+                        println!("pos: {:?}, dir: {:?}", position, direction);
                         /// Parses the pressed key and changes the value
                         match virtual_keycode {
                             VirtualKeyCode::W => {
-                                *position = [position[0] + norm_direction[0] * STEP, position[1] + norm_direction[1] * STEP, position[2] + norm_direction[2] * STEP];
-                                *direction = [direction[0] + norm_direction[0] * STEP, direction[1] + norm_direction[1] * STEP, direction[2] + norm_direction[2] * STEP];
+                                *position = add_vectors(&position, &vec_scal_mul(&camera_facing, STEP));
+                                *direction = add_vectors(&direction, &vec_scal_mul(&camera_facing, STEP));
                             },
                             VirtualKeyCode::A => {
-                                *position = [position[0] + norm_cross[0] * STEP, position[1] + norm_cross[1] * STEP, position[2] + norm_cross[2] * STEP];
-                                *direction = [direction[0] + norm_cross[0] * STEP, direction[1] + norm_cross[1] * STEP, direction[2] + norm_cross[2] * STEP];
+                                *position = add_vectors(&position, &vec_scal_mul(&camera_facing_orth, STEP));
+                                *direction = add_vectors(&direction, &vec_scal_mul(&camera_facing_orth, STEP));
                             }
                             VirtualKeyCode::S => {
-                                *position = [position[0] - norm_direction[0] * STEP, position[1] - norm_direction[1] * STEP, position[2] - norm_direction[2] * STEP];
-                                *direction = [direction[0] - norm_direction[0] * STEP, direction[1] - norm_direction[1] * STEP, direction[2] - norm_direction[2] * STEP];
+                                *position = sub_vectors(&position, &vec_scal_mul(&camera_facing, STEP));
+                                *direction = sub_vectors(&direction, &vec_scal_mul(&camera_facing, STEP));
                             }
                             VirtualKeyCode::D => {
-                                *position = [position[0] - norm_cross[0] * STEP, position[1] - norm_cross[1] * STEP, position[2] - norm_cross[2] * STEP];
-                                *direction = [direction[0] - norm_cross[0] * STEP, direction[1] - norm_cross[1] * STEP, direction[2] - norm_cross[2] * STEP];
+                                *position = sub_vectors(&position, &vec_scal_mul(&camera_facing_orth, STEP));
+                                *direction = sub_vectors(&direction, &vec_scal_mul(&camera_facing_orth, STEP));
                             }
                             VirtualKeyCode::J => *spin += STEP,
                             VirtualKeyCode::K => *spin -= STEP,
                             VirtualKeyCode::Right => {
-                                *direction = [direction[0] + norm_cross_3[0] * STEP, direction[1] + norm_cross_3[1] * STEP, direction[2] + norm_cross_3[2] * STEP];
+                                *direction = sub_vectors(&direction, &camera_facing_orth);
                             }
                             VirtualKeyCode::Left => {
-                                *direction = [direction[0] - norm_cross_3[0] * STEP, direction[1] - norm_cross_3[1] * STEP, direction[2] - norm_cross_3[2] * STEP];
+                                *direction = add_vectors(&direction, &camera_facing_orth);
                             }
                             VirtualKeyCode::Up => {
-                                *direction = [direction[0] + norm_cross_2[0] * STEP, direction[1] + norm_cross_2[1] * STEP, direction[2] + norm_cross_2[2] * STEP];
+                                *direction = add_vectors(&direction, &camera_vert_vec);
                             }
                             VirtualKeyCode::Down => {
-                                *direction = [direction[0] - norm_cross_2[0] * STEP, direction[1] - norm_cross_2[1] * STEP, direction[2] - norm_cross_2[2] * STEP];
+                                *direction = sub_vectors(&direction, &camera_vert_vec);
                             }
-                            VirtualKeyCode::Numpad8 => (*position)[1] -= STEP,
-                            VirtualKeyCode::Numpad2 => (*position)[1] += STEP,
-                            VirtualKeyCode::Numpad4 => (*position)[0] += STEP,
-                            VirtualKeyCode::Numpad6 => (*position)[0] -= STEP,
-                            VirtualKeyCode::Numpad5 => (*position)[2] += STEP,
-                            VirtualKeyCode::NumpadSubtract => *translate_x -= STEP,
-                            VirtualKeyCode::NumpadAdd => *translate_x += STEP,
-                            VirtualKeyCode::F1 => (*direction)[0] -= STEP,
-                            VirtualKeyCode::F2 => (*direction)[0] += STEP,
-                            VirtualKeyCode::F3 => (*direction)[1] -= STEP,
-                            VirtualKeyCode::F4 => (*direction)[1] += STEP,
-                            VirtualKeyCode::F5 => (*direction)[2] += STEP,
-                            VirtualKeyCode::F6 => (*direction)[2] -= STEP,
                             _ => (),
                         }
                     }
