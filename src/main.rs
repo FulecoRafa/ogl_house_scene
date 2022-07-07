@@ -85,8 +85,8 @@ fn main() {
             Vertex {
                 position: [v[0], v[1], v[2]],
                 tex_coords: [
-                    if v[2] == -50.0 { 0.0 } else { 1.0 },
-                    if v[0] == -50.0 { 0.0 } else { 1.0 },
+                    if v[2] == -50.0 { 0.0 } else { 100.0 },
+                    if v[0] == -50.0 { 0.0 } else { 100.0 },
                 ]
             }
         })
@@ -103,8 +103,8 @@ fn main() {
             Vertex {
                 position: [v[0], v[1], v[2]],
                 tex_coords: [
-                    if v[2] == -50.0 { 0.0 } else { 1.0 },
-                    if v[0] == 0.98 { 0.0 } else { 1.0 },
+                    if v[2] == -50.0 { 0.0 } else { 100.0 },
+                    if v[0] == 0.98 { 0.0 } else { 100.0 },
                 ]
             }
         })
@@ -121,7 +121,7 @@ fn main() {
             Vertex {
                 position: [v[0], v[1], v[2]],
                 tex_coords: [
-                    if v[2] == -50.0 { 0.0 } else { 1.0 },
+                    if v[2] == -50.0 { 0.0 } else { 10.0 },
                     if v[0] == -0.38 { 0.0 } else { 1.0 },
                 ]
             }
@@ -263,7 +263,8 @@ fn main() {
     let fabienne_tex = load_tex!(&display, "../textures/rp_fabienne_percy_posed_001_dif_2k.jpg", jpg);
     let dennis_tex = load_tex!(&display, "../textures/rp_dennis_posed_004_dif_2k.jpg", jpg);
     let altair_tex = load_tex!(&display, "../textures/kaleidoscope.jpg", jpg);
-    let ground_tex = load_tex!(&display, "../textures/grass.png", png);
+    let ground1_tex = load_tex!(&display, "../textures/grass.jpg", jpg);
+    let ground2_tex = load_tex!(&display, "../textures/tough_grass.jpg", jpg);
     let dragon_tex = load_tex!(&display, "../textures/Dragon_ground_color.jpg", jpg);
     let station_tex = load_tex!(&display, "../textures/gasstation red.png", png);
     let bus_tex = load_tex!(&display, "../textures/bus_d.png", png);
@@ -411,7 +412,7 @@ fn main() {
             &mut target,
             &draw_params,
             &Transform {
-                texture: Some(&ground_tex),
+                texture: Some(&ground1_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
                 ..Default::default()
@@ -422,7 +423,7 @@ fn main() {
             &mut target,
             &draw_params,
             &Transform {
-                texture: Some(&ground_tex),
+                texture: Some(&ground2_tex),
                 frame_dimensions: Some(dimensions),
                 view: [position, direction, up],
                 ..Default::default()
