@@ -66,6 +66,7 @@ fn main() {
         ..Default::default()
     };
 
+    /// Instantiates each model
     let bus = GenericModel::from_obj(&display, "models/bus.obj".to_string());
     let dragon = GenericModel::from_obj(&display, "models/Dragon.obj".to_string());
     let gas_station = GenericModel::from_obj(&display, "models/Station.obj".to_string());
@@ -312,6 +313,8 @@ fn main() {
         } = event_handler;
 
         let dimensions = target.get_dimensions();
+
+        // updates the light rotation matrix
         set_light_rotation(get_light_rotation() + 0.02);
 
         bus.draw(

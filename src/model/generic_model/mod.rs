@@ -14,6 +14,7 @@ pub struct GenericModel {
 
 impl GenericModel {
 
+    /// Creates a new GenericModel from given the indices, normals and vertices
     pub fn new(display: &Display, vertices: &Vec<Vertex>, indices: &Vec<u32>, normals: &Vec<Normal>) -> GenericModel {
         let model_data = ModelData {
             vertices: VertexBuffer::new(display, vertices).unwrap(),
@@ -25,6 +26,7 @@ impl GenericModel {
         }
     }
 
+    /// Creates a new GenericModel from given the path to the model file
     pub fn from_obj(display: &Display, obj_src: String) -> Self {
 
         let (vertices, indices, normals) = parse_model(&obj_src);
@@ -40,6 +42,7 @@ impl GenericModel {
 }
 
 impl Model for GenericModel {
+    /// Draws the model
     fn draw(&self, target: &mut Frame, params: &DrawParameters, transform: &Transform) {
         let uniforms = uniform! {
             translation: transform.get_translation(),

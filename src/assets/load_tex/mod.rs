@@ -1,5 +1,6 @@
 #[macro_export]
 macro_rules! load_tex {
+    // Macro that loads a texture from a png file.
     ($display: expr, $path: expr, png) => {
         {
             let image = image::load(std::io::Cursor::new(&include_bytes!($path)),
@@ -10,7 +11,7 @@ macro_rules! load_tex {
             texture
         }
     };
-
+    // Macro that loads a texture from a jpeg file
     ($display: expr, $path: expr, jpg) => {
         {
             let image = image::load(std::io::Cursor::new(&include_bytes!($path)),
@@ -23,6 +24,7 @@ macro_rules! load_tex {
     };
 
 
+    // Macro that loads a texture from a dds file
     ($display: expr, $path: expr, dds) => {
         {
             let image = image::load(std::io::Cursor::new(&include_bytes!($path)),

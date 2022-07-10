@@ -34,6 +34,7 @@ fn vec_scal_mul(vector: &[f32; 3], scalar: f32) -> [f32; 3] {
     [vector[0] * scalar, vector[1] * scalar, vector[2] * scalar]
 }
 
+/// Function that returns if a position is inside the bounds of the scene
 fn is_inbounds(position: &[f32; 3]) -> bool {
     return position[0] >= -2.2 && position[0] <= 2.2 && position[1] >= 0.1 && position[1] <= 2.2 && position[2] >= -2.2 && position[2] <= 2.2;
 }
